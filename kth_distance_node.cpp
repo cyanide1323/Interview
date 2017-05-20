@@ -1,3 +1,5 @@
+// kth node from a given node
+
  
 #include <map>
 #include <set>
@@ -97,37 +99,60 @@ T pow(T x,T n)
 }
 */
 
-struct node{
-    int data; 
-    node *left,*right;
-}*root;
+struct node
+{	
+	int data;
+	node *left,*right;
+};
 
-node* newNode(int var){
-    node *temp = new node;
-    temp->data = var;
-    temp->left=temp->right=NULL;
-
-    return temp;
+node* newnode(int data){
+	node *temp = new node;
+	temp->data=data;
+	temp->left=temp->right = NULL;
+	return temp;
 }
 
+void printdown(node *root, int k){
+	if(!root or k<0) return;
+	if(k==0) { cout<<root->data<<endl; return; }
+	printdown(root->left,k-1);
+	printdown(root->right,k-1);
+}
+
+int print_kth_node(node *root, node *target, int k){
+	if(!root) return -1;
+	if(target==root){
+		printdown(root,k);
+		return 0;
+	}
+	int dl = print_kth_node(root->left,target,k);
+	if(dl!=-1){
+		if(dl+1==k) cout<<root->data<<endl;
+		else printdown(root->right,k-dl-2);
+		return dl+1;
+	}
+	int dr = print_kth_node(root->right,target,k);
+	if(dr!=-1){
+		if(dr+1==k) cout<<root->data<<endl;
+		else printdown(root->left,k-dr-2);
+		return dr+1;
+	}
+	return -1;
+}
 
 
 int main(int argc,char *argv[])
 {
     //clock_t startTime = clock();
-    int n; cin>>n;
-    int rows = n , cols = (n<<1)-1;
-    int fillers =1;
-    for(int i=0;i<rows;i++){
-        int non_fillers = (cols-fillers)/2;
-        for(int j=0;j<cols;j++){
-            if(j<non_fillers) cout<<" ";
-            else if(j>(fillers+non_fillers)) cout<<" ";
-            else cout<<"*";
-        }
-        cout<<endl;
-        fillers+=2;
-    }
+    node * root = newnode(20);
+    root->left = newnode(8);
+    root->right = newnode(22);
+    root->left->left = newnode(4);
+    root->left->right = newnode(12);
+    root->left->right->left = newnode(10);
+    root->left->right->right = newnode(14);
+    node * target = root->left->right;
+    cout<< print_kth_node(root, target, 2) << endl;
     //cout << " Execution time is :: "<<double( clock() - startTime ) / (double)CLOCKS_PER_SEC<< " seconds." << endl;
     return 0;
 } 

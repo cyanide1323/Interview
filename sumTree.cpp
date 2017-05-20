@@ -1,4 +1,9 @@
- 
+// sum tree
+
+// view of binary tree from all sides like top, bottom, left, right
+
+//PENDING FOR THE TOP AND BOTTOM VIEW OF THE TREE
+
 #include <map>
 #include <set>
 #include <queue>
@@ -98,36 +103,39 @@ T pow(T x,T n)
 */
 
 struct node{
-    int data; 
-    node *left,*right;
-}*root;
+	int data;
+	node *left,*right;
+};
 
-node* newNode(int var){
-    node *temp = new node;
-    temp->data = var;
-    temp->left=temp->right=NULL;
-
-    return temp;
+node* newNode(int data){
+	node *temp = new node;
+	temp->data= data;
+	temp->left = temp->right = NULL;
+	return temp;
 }
 
+int sumTree(node *root){
+	if(!root) return 0;
+	 int old_data = root->data;
+
+	 root->data = sumTree(root->left)+sumTree(root->right);
+
+	 return root->data + old_data;
+}
 
 
 int main(int argc,char *argv[])
 {
     //clock_t startTime = clock();
-    int n; cin>>n;
-    int rows = n , cols = (n<<1)-1;
-    int fillers =1;
-    for(int i=0;i<rows;i++){
-        int non_fillers = (cols-fillers)/2;
-        for(int j=0;j<cols;j++){
-            if(j<non_fillers) cout<<" ";
-            else if(j>(fillers+non_fillers)) cout<<" ";
-            else cout<<"*";
-        }
-        cout<<endl;
-        fillers+=2;
-    }
+    struct node *root = newNode(12);
+    root->left = newNode(10);
+    root->right = newNode(30);
+    root->right->left = newNode(25);
+    root->right->right = newNode(40);
+
+    cout<<sumTree(root)<<endl;;
     //cout << " Execution time is :: "<<double( clock() - startTime ) / (double)CLOCKS_PER_SEC<< " seconds." << endl;
     return 0;
-} 
+}  
+
+

@@ -1,4 +1,6 @@
- 
+ // PLEASE COMPLETE IT IT'S VERY URGENT
+
+
 #include <map>
 #include <set>
 #include <queue>
@@ -17,6 +19,7 @@
 #include <utility>
 #include <iostream>
 #include <algorithm>
+#include <bits/stdc++.h>
 
  
 // definitions
@@ -97,36 +100,57 @@ T pow(T x,T n)
 }
 */
 
-struct node{
-    int data; 
-    node *left,*right;
-}*root;
 
-node* newNode(int var){
-    node *temp = new node;
-    temp->data = var;
-    temp->left=temp->right=NULL;
+char arr[100][100];
+bool visited[100][100];
+int row,col;
 
-    return temp;
+bool check(int i,int j,int row, int col){
+    return (i>=0 and i<row and j>=0 and j<col and !visited[i][j] and (arr[i][j]!='D'));
 }
 
+
+
+bool check_path(int row,int col,pii mouse,pii cheese){
+
+    cout<<"Mouse coordinates are "<<mouse.first<<"  "<<mouse.second<<endl;
+    
+    if(mouse.first==cheese.first and mouse.second==cheese.second)
+        return true;
+
+    bool answer = false,result=false;
+    for(int i=0;i<4;i++){
+        for(int j=0;j<4;j++){
+            mouse.first = mouse.first+dx[i];
+            mouse.second = mouse.second+dy[j];
+            cout<<"New coordinates are "<<mouse.first<<"  "<<mouse.second<<endl;
+            if(check(mouse.first,mouse.second,row,col)){
+                visited[mouse.first][mouse.second]=1;
+                result = result or check_path(row,col,mouse,cheese);
+            }
+            if(result) { answer=true; break; } 
+        }
+        if(answer) break;
+    }
+    return answer;
+}
 
 
 int main(int argc,char *argv[])
 {
     //clock_t startTime = clock();
-    int n; cin>>n;
-    int rows = n , cols = (n<<1)-1;
-    int fillers =1;
-    for(int i=0;i<rows;i++){
-        int non_fillers = (cols-fillers)/2;
-        for(int j=0;j<cols;j++){
-            if(j<non_fillers) cout<<" ";
-            else if(j>(fillers+non_fillers)) cout<<" ";
-            else cout<<"*";
+    int tc; cin>>tc;
+    while(tc--){
+        cin>>row>>col; getchar();
+        char arr[row][col]; bool visited[row][col]; pii mouse,cheese;
+        for(int i=0;i<row;i++){
+            for(int j=0;j<col;j++) {
+                cin>>arr[i][j]; visited[i][j]=0;
+                if(arr[i][j]=='A') { mouse.first = i; mouse.second=j; }
+                if(arr[i][j]=='B') { cheese.first=i; cheese.second=j; }
+            }
         }
-        cout<<endl;
-        fillers+=2;
+        cout<<check_path(row,col,mouse,cheese)<<endl;
     }
     //cout << " Execution time is :: "<<double( clock() - startTime ) / (double)CLOCKS_PER_SEC<< " seconds." << endl;
     return 0;

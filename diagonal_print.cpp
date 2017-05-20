@@ -1,4 +1,4 @@
- 
+
 #include <map>
 #include <set>
 #include <queue>
@@ -97,37 +97,42 @@ T pow(T x,T n)
 }
 */
 
-struct node{
-    int data; 
-    node *left,*right;
-}*root;
+#define m 5
+#define n 4
 
-node* newNode(int var){
-    node *temp = new node;
-    temp->data = var;
-    temp->left=temp->right=NULL;
+int arr[5][4] = {{1, 2, 3, 4},
+                       {5, 6, 7, 8},
+                       {9, 10, 11, 12},
+                       {13, 14, 15, 16},
+                       {17, 18, 19, 20},
+                      };
 
-    return temp;
+void printDiagonal(){
+	int i=0,j=0; bool flag = false;
+	while(i<m and j<n){
+		cout<<"i and j with flag are "<<i<<"  "<<j<<"  "<<flag<<endl;
+		//if(!flag){
+			while(i>=0 and i<m and j>=0 and j<n) { cout<<arr[i][j]<<" "; i=i>-1?0:i-1; j=j<n?n-1:j+1; }
+			j=j+1; flag=true;//continue;
+		//}
+		//if(flag) {
+			while(i>=0 and i<m and j>=0 and j<n) { cout<<arr[i][j]<<" "; i=i<m?m-1:i+1; j=j>-1?0:j-1; }
+			i=i+1;  flag=false; //continue;
+		cout<<endl;
+		//}
+	}
 }
-
-
 
 int main(int argc,char *argv[])
 {
     //clock_t startTime = clock();
-    int n; cin>>n;
-    int rows = n , cols = (n<<1)-1;
-    int fillers =1;
-    for(int i=0;i<rows;i++){
-        int non_fillers = (cols-fillers)/2;
-        for(int j=0;j<cols;j++){
-            if(j<non_fillers) cout<<" ";
-            else if(j>(fillers+non_fillers)) cout<<" ";
-            else cout<<"*";
-        }
-        cout<<endl;
-        fillers+=2;
-    }
+    int arr[m][n] = {{1, 2, 3, 4},
+                       {5, 6, 7, 8},
+                       {9, 10, 11, 12},
+                       {13, 14, 15, 16},
+                       {17, 18, 19, 20},
+                      };
+	printDiagonal();
     //cout << " Execution time is :: "<<double( clock() - startTime ) / (double)CLOCKS_PER_SEC<< " seconds." << endl;
     return 0;
 } 

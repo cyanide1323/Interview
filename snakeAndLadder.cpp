@@ -1,4 +1,5 @@
- 
+// snake and Ladder Problem, problem is pending
+
 #include <map>
 #include <set>
 #include <queue>
@@ -97,37 +98,42 @@ T pow(T x,T n)
 }
 */
 
-struct node{
-    int data; 
-    node *left,*right;
-}*root;
-
-node* newNode(int var){
-    node *temp = new node;
-    temp->data = var;
-    temp->left=temp->right=NULL;
-
-    return temp;
+int search(int arr[],int n){
+    bool visited[n+1];
+    for(int i=0;i<=n;i++) visited[i]=0;
+    queue<node> q;
+    node root = make_pair(0,0);
+    q.push(root);
+    while(!q.empty()){
+        if(visited[root->first]) return root->second;
+        visited[root->first]=1;
+        for(int i=1;i<=6;i++){
+            if( (root->first)+i<=(n+1) and !visited[root->first+1]){
+                visited[root->first+i]=1;
+                if(arr[root->first+i]!=-1) 
+            }
+        }
+    }
 }
-
-
 
 int main(int argc,char *argv[])
 {
     //clock_t startTime = clock();
-    int n; cin>>n;
-    int rows = n , cols = (n<<1)-1;
-    int fillers =1;
-    for(int i=0;i<rows;i++){
-        int non_fillers = (cols-fillers)/2;
-        for(int j=0;j<cols;j++){
-            if(j<non_fillers) cout<<" ";
-            else if(j>(fillers+non_fillers)) cout<<" ";
-            else cout<<"*";
-        }
-        cout<<endl;
-        fillers+=2;
-    }
+	int n; cin>>n;
+    int arr[n+1];
+    for(int i=0;i<=n;i++) arr[i]=-1;
+
+    arr[3]=22;
+    arr[5]=8;
+    arr[11]=26;
+    arr[20]=29;
+
+    arr[27]=1;
+    arr[21]=9; 
+    arr[17]=4;
+    arr[19]=7;
+
+    cout<<"Answer is "<< find(arr,n) << endl;
     //cout << " Execution time is :: "<<double( clock() - startTime ) / (double)CLOCKS_PER_SEC<< " seconds." << endl;
     return 0;
-} 
+}  

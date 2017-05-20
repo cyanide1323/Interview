@@ -1,4 +1,5 @@
- 
+// finding loop in the graph 
+
 #include <map>
 #include <set>
 #include <queue>
@@ -97,37 +98,51 @@ T pow(T x,T n)
 }
 */
 
-struct node{
-    int data; 
-    node *left,*right;
-}*root;
-
-node* newNode(int var){
-    node *temp = new node;
-    temp->data = var;
-    temp->left=temp->right=NULL;
-
-    return temp;
+int find(int parent[],int x){
+    if(parent[x]==-1) return x;
+    return find(parent,parent[x]);
 }
 
+int Union(int parent[],int a, int b){
+    int x = find(parent,a);
+    int y = find(parent,b);
 
+    parent[x]=y;
+}
+
+bool isCycle(int graph[][3],int V){
+    int parent[V]; 
+    memset(parent,-1,sizeof(parent));
+
+    for(int i=0;i<V;i++){
+        for(int j=i+1;j<V;j++){
+            if(i!=j and graph[i][j]==1 and graph[j][i]==1){
+                
+                int x = find(parent,i);
+                int y = find(parent,j);
+        
+                if(x==y) return true;
+                Union(parent,x,y);
+            }
+        }
+
+    }
+       
+    return false;
+}
 
 int main(int argc,char *argv[])
 {
     //clock_t startTime = clock();
-    int n; cin>>n;
-    int rows = n , cols = (n<<1)-1;
-    int fillers =1;
-    for(int i=0;i<rows;i++){
-        int non_fillers = (cols-fillers)/2;
-        for(int j=0;j<cols;j++){
-            if(j<non_fillers) cout<<" ";
-            else if(j>(fillers+non_fillers)) cout<<" ";
-            else cout<<"*";
-        }
-        cout<<endl;
-        fillers+=2;
-    }
+    int V = 3;  
+    int graph[3][3]={
+        {0,1,1},
+        {1,0,1},
+        {1,1,0}
+    };
+    bool flag = isCycle(graph,V);
+    if(flag) cout<<"Cycle is present in the graph\n";
+    else cout<<"Cycle is not present in the graph\n";
     //cout << " Execution time is :: "<<double( clock() - startTime ) / (double)CLOCKS_PER_SEC<< " seconds." << endl;
     return 0;
-} 
+}  

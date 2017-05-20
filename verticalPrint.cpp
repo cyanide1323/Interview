@@ -1,4 +1,9 @@
- 
+// Printing the binary tree in vertical pattern 
+
+// view of binary tree from all sides like top, bottom, left, right
+
+//PENDING FOR THE TOP AND BOTTOM VIEW OF THE TREE AND ALSO BOUNDARY TRAVERSAL
+
 #include <map>
 #include <set>
 #include <queue>
@@ -98,36 +103,55 @@ T pow(T x,T n)
 */
 
 struct node{
-    int data; 
-    node *left,*right;
-}*root;
+	int data;
+	node *left,*right;
+};
 
-node* newNode(int var){
-    node *temp = new node;
-    temp->data = var;
-    temp->left=temp->right=NULL;
 
-    return temp;
+
+node* newNode(int data){
+	node *temp = new node;
+	temp->data = data;
+	temp->left= temp->right = NULL;
+
+	return temp;
 }
 
+void verticalPrint(node *root,int hd, map<int,vector<int> >&mymap){
+	if(!root) return;
+
+	mymap[hd].push_back(root->data);
+	verticalPrint(root->left,hd-1,mymap);
+	verticalPrint(root->right,hd+1,mymap);
+}
 
 
 int main(int argc,char *argv[])
 {
     //clock_t startTime = clock();
-    int n; cin>>n;
-    int rows = n , cols = (n<<1)-1;
-    int fillers =1;
-    for(int i=0;i<rows;i++){
-        int non_fillers = (cols-fillers)/2;
-        for(int j=0;j<cols;j++){
-            if(j<non_fillers) cout<<" ";
-            else if(j>(fillers+non_fillers)) cout<<" ";
-            else cout<<"*";
-        }
-        cout<<endl;
-        fillers+=2;
-    }
+   
+    node *root = newNode(1);
+    root->left = newNode(2);
+    root->right = newNode(3);
+    root->left->left = newNode(4);
+    root->left->right = newNode(5);
+    root->right->left = newNode(6);
+    root->right->right = newNode(7);
+    root->right->left->right = newNode(8);
+    root->right->right->right = newNode(9);
+
+ 	map<int,vector<int> > mymap;
+
+ 	verticalPrint(root,0,mymap);
+ 	
+ 	map<int, vector<int> >::iterator it;
+ 	for(it=mymap.begin();it!=mymap.end();it++){
+ 		for(int i=0;i<it->second.size();i++){
+ 			cout<<it->second[i]<<"  ";
+ 		}
+ 		cout<<endl;
+ 	}
     //cout << " Execution time is :: "<<double( clock() - startTime ) / (double)CLOCKS_PER_SEC<< " seconds." << endl;
     return 0;
-} 
+}  
+

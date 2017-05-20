@@ -1,3 +1,7 @@
+// This is the algorithm of merge sort
+
+// find loop in the linked list
+
  
 #include <map>
 #include <set>
@@ -97,37 +101,47 @@ T pow(T x,T n)
 }
 */
 
-struct node{
-    int data; 
-    node *left,*right;
-}*root;
+int merge(int arr[], int low, int mid, int high){
+	
+	int i,j,k,n1,n2,inv_cnt=0;
+	n1 = mid-low+1;
+	n2 = high-mid;
+	int l[n1],r[n2];
+	i=0; j=0; k=0;
+	while(i<n1) { l[i]=arr[low+i]; i++; }
+	while(j<n2) { r[j]=arr[mid+1+j]; j++; }
+	i=0; j=0;
+	while(i<n1 and j<n2){
+		if(l[i]<=r[j]) { arr[k]=l[i]; i++; }
+		else { arr[k]=r[j]; j++; inv_cnt+=(mid-i); }
+		k++; 
+	}
 
-node* newNode(int var){
-    node *temp = new node;
-    temp->data = var;
-    temp->left=temp->right=NULL;
+	while(i<n1) { arr[k]=l[i]; i++; k++; }
+	while(j<n2) { arr[k]=r[j]; j++; k++; }
 
-    return temp;
+	return inv_cnt;
 }
 
-
+int mergesort(int arr[],int low,int high){
+	int inv_cnt=0;
+	if(low < high){
+		int mid = low+(high-1)/2;
+		inv_cnt=mergesort(arr,low,mid);
+		inv_cnt+=mergesort(arr,mid+1,high);
+		inv_cnt+=merge(arr,low,mid,high);
+	}
+	return inv_cnt;
+}
 
 int main(int argc,char *argv[])
 {
     //clock_t startTime = clock();
     int n; cin>>n;
-    int rows = n , cols = (n<<1)-1;
-    int fillers =1;
-    for(int i=0;i<rows;i++){
-        int non_fillers = (cols-fillers)/2;
-        for(int j=0;j<cols;j++){
-            if(j<non_fillers) cout<<" ";
-            else if(j>(fillers+non_fillers)) cout<<" ";
-            else cout<<"*";
-        }
-        cout<<endl;
-        fillers+=2;
-    }
+    int arr[n]; for(int i=0;i<n;i++) cin>>arr[i];
+    mergesort(arr,0,n-1);
+    for(int i=0;i<n;i++) cout<<arr[i]<<" ";
+    cout<<endl;
     //cout << " Execution time is :: "<<double( clock() - startTime ) / (double)CLOCKS_PER_SEC<< " seconds." << endl;
     return 0;
 } 

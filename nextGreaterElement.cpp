@@ -1,4 +1,9 @@
- 
+// find the next bigger element in an array for every index
+
+// view of binary tree from all sides like top, bottom, left, right
+
+//PENDING FOR THE TOP AND BOTTOM VIEW OF THE TREE AND ALSO BOUNDARY TRAVERSAL
+
 #include <map>
 #include <set>
 #include <queue>
@@ -97,37 +102,51 @@ T pow(T x,T n)
 }
 */
 
-struct node{
-    int data; 
-    node *left,*right;
-}*root;
-
-node* newNode(int var){
-    node *temp = new node;
-    temp->data = var;
-    temp->left=temp->right=NULL;
-
-    return temp;
+void bruteForce(int arr[],int n){
+	int i,j; bool flag;
+	for(i=0;i<n;i++){
+		flag = false;
+		for(j=i+1;j<n;j++){
+			if(arr[i]<arr[j]) { cout<<arr[j]<<" "; flag=true; break; }
+		}
+		if(!flag) cout<<"-1 ";
+	}
+	cout<<endl;
 }
 
+void optimized(int arr[],int n){
 
+	stack<int> st;
+    int i=0; st.push(arr[i]);
+
+    for(int i=1;i<n;i++){
+    	int ele = st.top();
+    	if(arr[i]>ele){
+    		while(arr[i]>ele and !st.empty()) {
+    			cout<<arr[i]<<" "; 
+    			st.pop();
+    			if(!st.empty()) ele = st.top();
+    		}
+    	}
+
+    	st.push(arr[i]);
+    }
+
+    while(!st.empty()){
+    	cout<<"-1 ";
+    	st.pop();
+    }
+    cout<<endl;
+}
 
 int main(int argc,char *argv[])
 {
     //clock_t startTime = clock();
-    int n; cin>>n;
-    int rows = n , cols = (n<<1)-1;
-    int fillers =1;
-    for(int i=0;i<rows;i++){
-        int non_fillers = (cols-fillers)/2;
-        for(int j=0;j<cols;j++){
-            if(j<non_fillers) cout<<" ";
-            else if(j>(fillers+non_fillers)) cout<<" ";
-            else cout<<"*";
-        }
-        cout<<endl;
-        fillers+=2;
-    }
+   	int n; cin>>n; int arr[n];
+   	for(int i=0;i<n;i++) cin>>arr[i];
+    bruteForce(arr,n);
+	optimized(arr,n);
     //cout << " Execution time is :: "<<double( clock() - startTime ) / (double)CLOCKS_PER_SEC<< " seconds." << endl;
     return 0;
-} 
+}  
+

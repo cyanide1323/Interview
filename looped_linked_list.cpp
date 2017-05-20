@@ -1,3 +1,5 @@
+// This program is for sole use of classes in cpp and sorting an object
+
  
 #include <map>
 #include <set>
@@ -74,9 +76,8 @@ void seive(int N)
      
     for(int i = 3; i*i < N;i+= 2)
     if(prime[i])
-        for(int j = i*i; j < N; j+= (i<<1))
-            prime[j]=false;
-}
+  )
+            prime[len
 */
  
 /*
@@ -98,36 +99,61 @@ T pow(T x,T n)
 */
 
 struct node{
-    int data; 
-    node *left,*right;
-}*root;
+	int data; 
+	node *next;
+};
 
-node* newNode(int var){
-    node *temp = new node;
-    temp->data = var;
-    temp->left=temp->right=NULL;
+class element{
+	public:
+		node *newNode(int data);
+		bool find_loop(node *head);
+		void remove_loop(node *head);
+		void print(node *head);
+};
 
-    return temp;
+node* element :: newNode(int data){
+	node *temp = new node;
+	temp->data = data;
+	temp->next=NULL;
+	return temp;
 }
 
+bool element :: find_loop(node *head){
+	node *slow=head,*fast=head;
 
+	while(slow and fast and fast->next){
+		slow=slow->next;
+		fast=fast->next->next;
+		if(slow==fast) return 1;
+	}
+	return 0;
+}
+
+void element :: remove_loop(node *head){
+
+}
+
+void element :: print(node *head){
+	while(head){
+		cout<<head->next<<" ";
+		head=head->next;
+	}
+	cout<<endl;
+}
 
 int main(int argc,char *argv[])
 {
     //clock_t startTime = clock();
-    int n; cin>>n;
-    int rows = n , cols = (n<<1)-1;
-    int fillers =1;
-    for(int i=0;i<rows;i++){
-        int non_fillers = (cols-fillers)/2;
-        for(int j=0;j<cols;j++){
-            if(j<non_fillers) cout<<" ";
-            else if(j>(fillers+non_fillers)) cout<<" ";
-            else cout<<"*";
-        }
-        cout<<endl;
-        fillers+=2;
-    }
+    element e;
+    node *head = e.newNode(50);
+    head->next = e.newNode(20);
+    head->next->next = e.newNode(15);
+    head->next->next->next = e.newNode(4);
+    head->next->next->next->next = e.newNode(10);
+  	head->next->next->next->next->next = head->next->next;
+    cout<< e.find_loop(head) << endl;
+    cout<< e.remove_loop(head) << endl;
+    cout<< e.print(head);
     //cout << " Execution time is :: "<<double( clock() - startTime ) / (double)CLOCKS_PER_SEC<< " seconds." << endl;
     return 0;
 } 

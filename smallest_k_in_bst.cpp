@@ -1,3 +1,5 @@
+// find loop in the linked list
+
  
 #include <map>
 #include <set>
@@ -98,36 +100,66 @@ T pow(T x,T n)
 */
 
 struct node{
-    int data; 
+    int data;
     node *left,*right;
-}*root;
+    int ltree,rtree;
+};
 
-node* newNode(int var){
+node* newNode(int data){
     node *temp = new node;
-    temp->data = var;
-    temp->left=temp->right=NULL;
-
+    temp->data = data;
+    temp->next = NULL;
+    temp->left=temp->right=0;
     return temp;
 }
+
+int markings(node *root){
+    
+    if(!root) return 0;
+    
+    int k=0;
+
+    root->ltree = markings(root->left);
+    root->rtree = markings(root->right);
+
+    return k+1;
+}
+
+//This is recursive function 
+void search(node *root,int k){
+    if(!root) return;
+    int temp = root->ltree + root->rtree; 
+    if( temp == k ) cout<< root->data << endl;
+    else if(root->ltree > k) search(root->left,k);
+    else search(root->right,k-(root->ltree+1));
+}
+
+//This is iterative function
+void iterative_search(node *root,int k){
+    node *ptr = root; 
+    if(root->ltree + root->rtree +1 < k or !root) return;
+    while(1){
+        if( (root->ltree + 1) == k ) {
+            cout<<root->data << endl;
+            return;
+        }  
+        else if(root->ltree < k) {
+            k = k-(root->ltree+1);
+            root=root->right;
+        }
+        else root=root->left;
+    }
+    return;
+}
+
+
 
 
 
 int main(int argc,char *argv[])
 {
     //clock_t startTime = clock();
-    int n; cin>>n;
-    int rows = n , cols = (n<<1)-1;
-    int fillers =1;
-    for(int i=0;i<rows;i++){
-        int non_fillers = (cols-fillers)/2;
-        for(int j=0;j<cols;j++){
-            if(j<non_fillers) cout<<" ";
-            else if(j>(fillers+non_fillers)) cout<<" ";
-            else cout<<"*";
-        }
-        cout<<endl;
-        fillers+=2;
-    }
+    
     //cout << " Execution time is :: "<<double( clock() - startTime ) / (double)CLOCKS_PER_SEC<< " seconds." << endl;
     return 0;
 } 

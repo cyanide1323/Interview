@@ -1,4 +1,5 @@
- 
+// Topoligcal sorting of the graph
+
 #include <map>
 #include <set>
 #include <queue>
@@ -97,37 +98,54 @@ T pow(T x,T n)
 }
 */
 
-struct node{
-    int data; 
-    node *left,*right;
-}*root;
+class Topology{
+	int V;
+	public:
+		void addEdge(int u,int v);
+		void topologicalSort(int start,stack<int>&,bool visited[]);
+		Topology(int V);
+};
 
-node* newNode(int var){
-    node *temp = new node;
-    temp->data = var;
-    temp->left=temp->right=NULL;
+Topology :: Topology(int V){
+	this->V = V;
+} 
 
-    return temp;
+vector<int> v[7];
+
+void Topology :: topologicalSort(int start,stack<int>&st,bool visited[]){
+	
+	if(visited[start]) return;
+	visited[start]=1;
+	for(int i=0;i<v[start].size();i++)
+		if(!visited[v[start][i]]) topologicalSort(v[start][i],st,visited);
+	st.push(start);
+
 }
 
-
+void Topology :: addEdge(int x,int y){
+	v[x].push_back(y);	
+}
 
 int main(int argc,char *argv[])
 {
     //clock_t startTime = clock();
-    int n; cin>>n;
-    int rows = n , cols = (n<<1)-1;
-    int fillers =1;
-    for(int i=0;i<rows;i++){
-        int non_fillers = (cols-fillers)/2;
-        for(int j=0;j<cols;j++){
-            if(j<non_fillers) cout<<" ";
-            else if(j>(fillers+non_fillers)) cout<<" ";
-            else cout<<"*";
-        }
-        cout<<endl;
-        fillers+=2;
+	Topology graph(6);
+
+    stack<int> st;
+    
+    graph.addEdge(5,2);
+    graph.addEdge(5,0);
+    graph.addEdge(4,0);
+    graph.addEdge(4,1);
+    graph.addEdge(2,3);
+    graph.addEdge(3,1);
+
+    bool visited[7]; for(int i=0;i<7;i++) visited[i]=0;
+    for(int i=0;i<6;i++){
+    	graph.topologicalSort(i,st,visited);
     }
+    while(!st.empty()) { cout<<st.top()<<" "; st.pop(); }
+    cout<<endl;
     //cout << " Execution time is :: "<<double( clock() - startTime ) / (double)CLOCKS_PER_SEC<< " seconds." << endl;
     return 0;
-} 
+}  

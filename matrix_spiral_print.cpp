@@ -1,3 +1,5 @@
+// spiral printing of the matrix
+
  
 #include <map>
 #include <set>
@@ -74,9 +76,8 @@ void seive(int N)
      
     for(int i = 3; i*i < N;i+= 2)
     if(prime[i])
-        for(int j = i*i; j < N; j+= (i<<1))
-            prime[j]=false;
-}
+  )
+            prime[len
 */
  
 /*
@@ -92,42 +93,69 @@ T pow(T x,T n)
         y*=y; 
         n/=2;
     }
-    r*=y; 
+    r*=y; ,
     return r;
 }
 */
 
-struct node{
-    int data; 
-    node *left,*right;
-}*root;
+#define R 3
+#define C 6
 
-node* newNode(int var){
-    node *temp = new node;
-    temp->data = var;
-    temp->left=temp->right=NULL;
+void rotate_matrix(int arr[R][C]){
+    
+    int i,j,start_i=0,start_j=0,stop_i=R-1,stop_j=C-1;
+    
+    while(start_i<=stop_i and start_j<=stop_j){
+        
+        for(j=start_j;j<=stop_j;j++) {  
+            cout<<arr[start_i][j]<<" "; 
+        }
+        start_i=start_i+1; cout<<endl;
+        
+        for(i=start_i;i<=stop_i;i++) {
+         cout<<arr[i][stop_j]<<" ";
+        }
+        stop_j=stop_j-1; cout<<endl;
+     
+        //if(start_i<stop_i){   
+            for(j=stop_j;j>=start_j;j--) { 
+                cout<<arr[stop_i][j]<<" "; 
+                }
+        //}
+        stop_i=stop_i-1; cout<<endl;
+        
+        //if(start_j<stop_j){
+            for(i=stop_i;i>=start_i;i--) { 
+                cout<<arr[i][start_j]<<" "; 
+            }
+        //}
+        start_j=start_j+1; cout<<endl;
 
-    return temp;
+        cout << "start and stop :: "<<start_i << "  " << stop_i << "  " << start_j << "  " << stop_j << endl;
+    }
 }
 
-
+/*
+void print(int arr[][],int n){
+    for(int i=0;i<n;i++){
+        for(int j=0;j<n;j++){
+            cout<<arr[i][j]<<" ";
+        }
+    }
+    cout<<endl;
+}
+*/
 
 int main(int argc,char *argv[])
 {
     //clock_t startTime = clock();
-    int n; cin>>n;
-    int rows = n , cols = (n<<1)-1;
-    int fillers =1;
-    for(int i=0;i<rows;i++){
-        int non_fillers = (cols-fillers)/2;
-        for(int j=0;j<cols;j++){
-            if(j<non_fillers) cout<<" ";
-            else if(j>(fillers+non_fillers)) cout<<" ";
-            else cout<<"*";
-        }
-        cout<<endl;
-        fillers+=2;
-    }
+	int arr[R][C] = { {1,  2,  3,  4,  5,  6},
+        {7,  8,  9,  10, 11, 12},
+        {13, 14, 15, 16, 17, 18}
+    };
+    //print(matrix,n);
+    rotate_matrix(arr);
+    //print(matrix,n);
     //cout << " Execution time is :: "<<double( clock() - startTime ) / (double)CLOCKS_PER_SEC<< " seconds." << endl;
     return 0;
 } 

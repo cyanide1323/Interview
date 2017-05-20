@@ -17,6 +17,7 @@
 #include <utility>
 #include <iostream>
 #include <algorithm>
+#include <bits/stdc++.h>
 
  
 // definitions
@@ -97,36 +98,33 @@ T pow(T x,T n)
 }
 */
 
-struct node{
-    int data; 
-    node *left,*right;
-}*root;
-
-node* newNode(int var){
-    node *temp = new node;
-    temp->data = var;
-    temp->left=temp->right=NULL;
-
-    return temp;
+int cyanide(string str, string last,int k,int val){
+    if(str.compare(last)==0) return 0;
+    int len = str.length();
+    for(int i=0;i<len-k+1;i++){
+        string temp = str;
+        for(int j=0;j<k;j++){
+            if(temp[i+j]=='+') temp[i+j]='-';
+            else temp[i+j]='-';
+        }
+        val=min(val,cyanide(temp,last,k,val));
+    }
+    return val;
 }
-
 
 
 int main(int argc,char *argv[])
 {
     //clock_t startTime = clock();
-    int n; cin>>n;
-    int rows = n , cols = (n<<1)-1;
-    int fillers =1;
-    for(int i=0;i<rows;i++){
-        int non_fillers = (cols-fillers)/2;
-        for(int j=0;j<cols;j++){
-            if(j<non_fillers) cout<<" ";
-            else if(j>(fillers+non_fillers)) cout<<" ";
-            else cout<<"*";
-        }
-        cout<<endl;
-        fillers+=2;
+    int tc; cin>>tc; int case_no=1;
+    while(case_no<=tc){
+        getchar();
+        string str; cin>>str; int k; cin>>k;
+        int len = str.length();
+        string last = ""; int val = INT_MAX;
+        for(int i=0;i<len;i++) last+='+';
+        cout<<"Case #"<<case_no<<": "<< cyanide(str,last,k,val) << endl;
+        case_no++;
     }
     //cout << " Execution time is :: "<<double( clock() - startTime ) / (double)CLOCKS_PER_SEC<< " seconds." << endl;
     return 0;

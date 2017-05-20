@@ -1,3 +1,5 @@
+// This program is for sole use of classes in cpp and sorting an object
+
  
 #include <map>
 #include <set>
@@ -74,9 +76,8 @@ void seive(int N)
      
     for(int i = 3; i*i < N;i+= 2)
     if(prime[i])
-        for(int j = i*i; j < N; j+= (i<<1))
-            prime[j]=false;
-}
+  )
+            prime[len
 */
  
 /*
@@ -97,37 +98,65 @@ T pow(T x,T n)
 }
 */
 
-struct node{
-    int data; 
-    node *left,*right;
-}*root;
+class object{
+	public:
+		int var;
+		char ch;
+		void mergesort(object a[],int low, int high);
+		void merge(object a[],int low, int mid, int high);
+		void print(object a[],int b);
+};
 
-node* newNode(int var){
-    node *temp = new node;
-    temp->data = var;
-    temp->left=temp->right=NULL;
-
-    return temp;
+void object::mergesort(object temp[],int low,int high){
+	if(low<high){
+		int mid = low+(high-low)/2;
+		mergesort(temp,low,mid);
+		mergesort(temp,mid+1,high);
+		merge(temp,low,mid,high);
+	}
 }
 
+void object::merge(object temp[],int low,int mid,int high){
+	int i,j,k,n1,n2;
+	n1 = mid-low+1;
+	n2 = high-mid;
+	object l[n1],r[n2];
+	for(i=0;i<n1;i++) l[i]=temp[low+i];
+	for(j=0;j<n2;j++) r[j]=temp[mid+j+1];
+	i=0; j=0; k=1;
+	while(i<n1 and j<n2){
+		if(l[i].ch<r[j].ch or (l[i].ch==r[j].ch and l[i].var<=r[j].var)) { temp[k]=l[i]; i++; }
+		else {
+			object o = l[i];
+			l[i]=r[j];
+			r[i]=o; 
+			j++;
+		}
+		k++;
+	}
+	while(i<n1) { temp[k]=l[i]; k++; i++; }
+	while(j<n2) { temp[k]=r[j]; k++; j++; }
+}
+
+void object::print(object temp[],int n){
+	for(int i=0;i<n;i++){
+		cout<<temp[i].ch<<""<<temp[i].var<<endl;
+	}
+}
 
 
 int main(int argc,char *argv[])
 {
     //clock_t startTime = clock();
-    int n; cin>>n;
-    int rows = n , cols = (n<<1)-1;
-    int fillers =1;
-    for(int i=0;i<rows;i++){
-        int non_fillers = (cols-fillers)/2;
-        for(int j=0;j<cols;j++){
-            if(j<non_fillers) cout<<" ";
-            else if(j>(fillers+non_fillers)) cout<<" ";
-            else cout<<"*";
-        }
-        cout<<endl;
-        fillers+=2;
-    }
+    object temp[4];
+    temp[0].ch='A'; temp[0].var=4;
+    temp[1].ch='B'; temp[1].var=3;
+    temp[2].ch='A'; temp[2].var=2;
+    temp[3].ch='C'; temp[3].var=2;
+
+    object o; 
+    o.mergesort(temp,0,3);
+    o.print(temp,4);
     //cout << " Execution time is :: "<<double( clock() - startTime ) / (double)CLOCKS_PER_SEC<< " seconds." << endl;
     return 0;
 } 

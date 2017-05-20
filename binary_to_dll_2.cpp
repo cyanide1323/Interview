@@ -98,36 +98,87 @@ T pow(T x,T n)
 */
 
 struct node{
-    int data; 
+    int data;
     node *left,*right;
-}*root;
+};
 
-node* newNode(int var){
-    node *temp = new node;
-    temp->data = var;
-    temp->left=temp->right=NULL;
 
-    return temp;
+void binarytoLeft(node *root, node *prev){
+    if(!root) return;
+
+    if(root->left) binarytoLeft(root->left,prev);
+
+    root->left = prev;
+    prev = root;
+
+
+    if(root->right) binarytoLeft(root->right,prev);
+
+    return;
+}
+
+node* binarytoRight(node *root){
+    if(!root) return NULL;
+    while(root and root->right) root=root->right;
+    node *prev = NULL;
+    while(root and root->left){
+        prev = root;
+        root = root->left;
+        root->right = prev;
+    }
+
+    return root;
 }
 
 
 
+node* convert(node *root){
+    
+
+    node *prev = NULL;
+    binarytoLeft(root,prev);
+    return binarytoRight(root);
+}
+
+void printList(node *root){
+    while(root) {
+        cout<<root->data<<" ";
+        root=root->right;
+    }
+}
+
+void inorder(node *root){
+    if(!root) return;
+    inorder(root->left);
+    cout<<root->data<<" ";
+    inorder(root->right);
+}
+
+node* newNode(int data){
+    node *temp = new node;
+    temp->data = data;
+    temp->left=temp->right = NULL;
+
+    return temp;
+}
+
 int main(int argc,char *argv[])
 {
     //clock_t startTime = clock();
-    int n; cin>>n;
-    int rows = n , cols = (n<<1)-1;
-    int fillers =1;
-    for(int i=0;i<rows;i++){
-        int non_fillers = (cols-fillers)/2;
-        for(int j=0;j<cols;j++){
-            if(j<non_fillers) cout<<" ";
-            else if(j>(fillers+non_fillers)) cout<<" ";
-            else cout<<"*";
-        }
-        cout<<endl;
-        fillers+=2;
-    }
+    node *root        = newNode(10);
+    root->left        = newNode(12);
+    root->right       = newNode(15);
+    root->left->left  = newNode(25);
+    root->left->right = newNode(30);
+    root->right->left = newNode(36);
+ 
+    inorder(root);
+    cout<<endl; 
+    // Convert to DLL
+    node *head = convert(root);
+ 
+    // Print the converted list
+    printList(head);
     //cout << " Execution time is :: "<<double( clock() - startTime ) / (double)CLOCKS_PER_SEC<< " seconds." << endl;
     return 0;
 } 

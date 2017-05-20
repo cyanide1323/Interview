@@ -1,3 +1,7 @@
+// program to print all the substrings of the string
+
+// This program is for sole use of classes in cpp and sorting an object
+
  
 #include <map>
 #include <set>
@@ -74,9 +78,8 @@ void seive(int N)
      
     for(int i = 3; i*i < N;i+= 2)
     if(prime[i])
-        for(int j = i*i; j < N; j+= (i<<1))
-            prime[j]=false;
-}
+  )
+            prime[len
 */
  
 /*
@@ -97,37 +100,19 @@ T pow(T x,T n)
 }
 */
 
-struct node{
-    int data; 
-    node *left,*right;
-}*root;
-
-node* newNode(int var){
-    node *temp = new node;
-    temp->data = var;
-    temp->left=temp->right=NULL;
-
-    return temp;
-}
-
-
 
 int main(int argc,char *argv[])
 {
     //clock_t startTime = clock();
-    int n; cin>>n;
-    int rows = n , cols = (n<<1)-1;
-    int fillers =1;
-    for(int i=0;i<rows;i++){
-        int non_fillers = (cols-fillers)/2;
-        for(int j=0;j<cols;j++){
-            if(j<non_fillers) cout<<" ";
-            else if(j>(fillers+non_fillers)) cout<<" ";
-            else cout<<"*";
-        }
-        cout<<endl;
-        fillers+=2;
-    }
+  	string str; getline(cin,str);
+  	int len = (int)str.length();
+  	for(int i=0;i<=len;i++){
+  		string token = "";
+		int temp = i; 
+		while(temp){
+			if(temp&var) 
+		}
+  	} 
     //cout << " Execution time is :: "<<double( clock() - startTime ) / (double)CLOCKS_PER_SEC<< " seconds." << endl;
     return 0;
 } 

@@ -97,37 +97,36 @@ T pow(T x,T n)
 }
 */
 
-struct node{
-    int data; 
-    node *left,*right;
-}*root;
-
-node* newNode(int var){
-    node *temp = new node;
-    temp->data = var;
-    temp->left=temp->right=NULL;
-
-    return temp;
-}
-
 
 
 int main(int argc,char *argv[])
 {
     //clock_t startTime = clock();
-    int n; cin>>n;
-    int rows = n , cols = (n<<1)-1;
-    int fillers =1;
-    for(int i=0;i<rows;i++){
-        int non_fillers = (cols-fillers)/2;
-        for(int j=0;j<cols;j++){
-            if(j<non_fillers) cout<<" ";
-            else if(j>(fillers+non_fillers)) cout<<" ";
-            else cout<<"*";
-        }
-        cout<<endl;
-        fillers+=2;
+    string str; cin>>str;
+    vector<int> vowels,cons; 
+    for(int i=0;i<str.length();i++){
+        if(str[i]=='a' or str[i]=='e' or str[i]=='i' or str[i]=='o' or str[i]=='u') vowels.push_back(i);
+        else cons.push_back(i);
     }
+
+    //cout<<str[69]<<endl;
+
+    //for(int i=0;i<cons.size();i++) cout<<cons[i]<<"  ";
+    //    cout<<endl;
+
+    map<string,int> mymap;
+
+    for(int i=0;i<vowels.size();i++){
+        for(int j=0;j<cons.size();j++){
+            int len = cons[j]-vowels[i];
+            if(vowels[i]<cons[j]) mymap.insert(make_pair(str.substr(vowels[i],len+1),len+1));
+        }
+    }
+
+    map<string,int>::iterator it=mymap.begin();
+    cout<<it->first<<endl;
+    it=mymap.end(); it--;
+    cout<<it->first<<endl;
     //cout << " Execution time is :: "<<double( clock() - startTime ) / (double)CLOCKS_PER_SEC<< " seconds." << endl;
     return 0;
 } 

@@ -1,4 +1,7 @@
- 
+// This is the code to find minimum islands in the matrix well connected within
+
+
+
 #include <map>
 #include <set>
 #include <queue>
@@ -48,15 +51,15 @@ const double EPS=1e-11;
  
 using namespace std;
  
-
+/*
 int dx[]={1,0,0,-1};
 int dy[]={0,1,-1,0};
+*/
  
  
-/* 
 int dx[]={1,0,0,-1,1,1,-1,-1};
 int dy[]={0,-1,1,0,1,-1,1,-1};
-*/
+
  
 template<class T>
 T gcd(T a, T b) { while(b) b ^= a ^= b ^= a %= b; return a; }
@@ -97,37 +100,55 @@ T pow(T x,T n)
 }
 */
 
-struct node{
-    int data; 
-    node *left,*right;
-}*root;
+#define row 5
+#define col 5
 
-node* newNode(int var){
-    node *temp = new node;
-    temp->data = var;
-    temp->left=temp->right=NULL;
-
-    return temp;
+bool bound(int x,int y){
+	return (x>=0 and x<row and y>=0 and y<col);
 }
 
+void bfs(int x,int y,bool done[][col], int arr[][col]){
+	if(done[x][y] or arr[x][y]!=1) return;
+	done[x][y]=1;
+	for(int i=0;i<8;i++){
+			int new_x = x+dx[i];
+			int new_y = y+dy[i];
+			if( bound(new_x,new_y) ) bfs(new_x,new_y,done,arr);
+	}
+	return;
+}
 
+int generate(int arr[][col], bool done[][col]){
+	int elements = 0;
+	for(int i=0;i<row;i++){
+		for(int j=0;j<col;j++){
+			if(!done[i][j] and arr[i][j]!=0)
+				{ bfs(i,j,done,arr); elements++; }
+		}
+	}
+	return elements;
+}
 
 int main(int argc,char *argv[])
 {
     //clock_t startTime = clock();
-    int n; cin>>n;
-    int rows = n , cols = (n<<1)-1;
-    int fillers =1;
-    for(int i=0;i<rows;i++){
-        int non_fillers = (cols-fillers)/2;
-        for(int j=0;j<cols;j++){
-            if(j<non_fillers) cout<<" ";
-            else if(j>(fillers+non_fillers)) cout<<" ";
-            else cout<<"*";
-        }
-        cout<<endl;
-        fillers+=2;
-    }
+   	 int arr[row][col]= {  
+   	 	{1, 1, 0, 0, 0},
+        {0, 1, 0, 0, 1},
+        {1, 0, 0, 1, 1},
+        {0, 0, 0, 0, 0},
+        {1, 0, 1, 0, 1} };
+
+       bool done[row][col]= {  
+       	{0, 0, 0, 0, 0},
+        {0, 0, 0, 0, 0},
+        {0, 0, 0, 0, 0},
+        {0, 0, 0, 0, 0},
+        {0, 0, 0, 0, 0} };
+
+   	//for(int i=0;i<row;i++) for(int j=0;j<col;j++) { cin>>arr[i][j]; done[i][j]=0; }
+   	cout<<"Minimum Islands are "<<generate(arr,done)<<endl;
     //cout << " Execution time is :: "<<double( clock() - startTime ) / (double)CLOCKS_PER_SEC<< " seconds." << endl;
     return 0;
-} 
+}  
+
