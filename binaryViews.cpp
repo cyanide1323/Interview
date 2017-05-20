@@ -1,6 +1,4 @@
-// view of binary tree from all sides like top, bottom, left, right
-
-//PENDING FOR THE TOP AND BOTTOM VIEW OF THE TREE AND ALSO BOUNDARY TRAVERSAL
+// view of binary tree from all sides like top, bottom, left, right and boundary traversal
 
 #include <map>
 #include <set>
@@ -112,19 +110,19 @@ class Print{
 		
 		node* newNode(int data);
 		
-		/*
+		
 		void leftView(node *root,int a,int *b);
 		void rightView(node *root,int a,int *b);
-		*/
+		
 		void topView(node *root);
 		void leftSide(node *root,int a,int *b);
 		void rightSide(node *root,int a,int *b);
-		/*
+		
 		void boundaryTraversal(node *root);
 		void leftTraversal(node *root);
 		void bottomTraversal(node *root);
 		void rightTraversal(node *root);
-		*/
+		
 };
 
 node* Print :: newNode(int data){
@@ -133,7 +131,7 @@ node* Print :: newNode(int data){
 	temp->left = temp->right = NULL;
 	return temp;
 }
-/*
+
 void Print :: leftView(node *root,int currHeight,int *maxHeight){
 	
 	if(!root) return;
@@ -155,7 +153,7 @@ void Print :: rightView(node *root,int currHeight,int *maxHeight){
 	rightView(root->right,currHeight+1,maxHeight);
 	rightView(root->left,currHeight+1,maxHeight);
 }
-*/
+
 
 vector<int> elements;
 void Print :: leftSide(node *root,int currLeft, int *maxLeft){
@@ -189,7 +187,7 @@ void Print :: topView(node *root){
 	rightSide(root,currRight,&maxRight);
 	cout<<endl;
 }
-/*
+
 void Print :: bottomTraversal(node *root){
 	if(!root) return;
 	if(root->left==NULL and root->right==NULL) cout<<root->data<<"  ";
@@ -239,7 +237,24 @@ void Print :: boundaryTraversal(node *root){
 	
 	cout<<"\n";
 	return;
-}*/
+}
+
+void recursiveInorder(node *root){
+	if(!root) return;
+	recursiveInorder(root->left);
+	cout<<root->data<<"  ";
+	recursiveInorder(root->right); 
+}
+
+void iterativeInorder(node *root){
+	if(!root) return;
+	stack<node*> st;
+	st.push(root);
+	while(1){
+		if(st.empty()) break;
+		if(root->left) { root=root->left;st.push(root); }
+		if(!root and !st.empty()) { node *temp = st.top(); cout<<data->data<<"  "; root=root->right;}
+}
 
 int main(int argc,char *argv[])
 {
@@ -251,13 +266,12 @@ int main(int argc,char *argv[])
     root->right->left = p.newNode(25);
     root->right->right = p.newNode(40);
 
- 	/*int currHeight=1,maxHeight=0;
+ 	int currHeight=1,maxHeight=0;
     leftView(root,currHeight,&maxHeight);
     currHeight=1;maxHeight=0; cout<<endl;
-    rightView(root,currHeight,&maxHeight); */
-    //map<int,string> mymap;
-    //topView(root,0);
-    p.topView(root);
+    rightView(root,currHeight,&maxHeight); 
+ 
+ 	p.topView(root);
     //cout << " Execution time is :: "<<double( clock() - startTime ) / (double)CLOCKS_PER_SEC<< " seconds." << endl;
     return 0;
 }  

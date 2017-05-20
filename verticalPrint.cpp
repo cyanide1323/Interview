@@ -1,9 +1,5 @@
 // Printing the binary tree in vertical pattern 
 
-// view of binary tree from all sides like top, bottom, left, right
-
-//PENDING FOR THE TOP AND BOTTOM VIEW OF THE TREE AND ALSO BOUNDARY TRAVERSAL
-
 #include <map>
 #include <set>
 #include <queue>

@@ -110,7 +110,7 @@ Topology :: Topology(int V){
 	this->V = V;
 } 
 
-vector<int> v[7];
+// vector<int> v[7];
 
 void Topology :: topologicalSort(int start,stack<int>&st,bool visited[]){
 	

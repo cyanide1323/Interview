@@ -147,7 +147,7 @@ int main(int argc,char *argv[])
         {0, 0, 0, 0, 0} };
 
    	//for(int i=0;i<row;i++) for(int j=0;j<col;j++) { cin>>arr[i][j]; done[i][j]=0; }
-   	cout<<"Minimum Islands are "<<generate(arr,done)<<endl;
+   	cout<<"Minimum Islands are "<< generate(arr,done) <<endl;
     //cout << " Execution time is :: "<<double( clock() - startTime ) / (double)CLOCKS_PER_SEC<< " seconds." << endl;
     return 0;
 }  
