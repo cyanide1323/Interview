@@ -101,8 +101,8 @@ T pow(T x,T n)
 int search(int arr[],int n){
     bool visited[n+1];
     for(int i=0;i<=n;i++) visited[i]=0;
-    queue<node> q;
-    node root = make_pair(0,0);
+    queue<pii> q;
+    pii root = make_pair(0,0);
     q.push(root);
     while(!q.empty()){
         if(visited[root->first]) return root->second;
