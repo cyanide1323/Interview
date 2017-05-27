@@ -42,8 +42,19 @@ void sortedHashMap(int arr1[],int arr2[],int m,int n){
 	cout<<endl;
 }	
 
-bool compare(int a, int b){
-	return a<=b;
+bool compare(int a,int b){
+	
+	int index=-1, index2=-1;
+
+	index1 = search(arr2,a);
+	index2 = search(arr2,b);
+
+	if(index1==-1 and index2==-1) 
+		return a<=b;
+	if(index1!=-1 and index2!=-1)
+		return index1<index2;
+	
+
 }
 
 int main(){
