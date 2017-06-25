@@ -1,4 +1,3 @@
-// finding loop in the graph 
 
 #include <map>
 #include <set>
@@ -22,7 +21,6 @@
  
 // definitions
  
-#define pii pair<int,int>
 #define piii pair<int,pii>
 #define mp(a,b) make_pair(a,b)
 #define pf(a) push_front(a)
@@ -98,55 +96,59 @@ T pow(T x,T n)
 }
 */
 
-int find(int parent[],int x){
-    if(parent[x]==-1) return x;
-    return find(parent,parent[x]);
+struct node{
+    int data; 
+    node *left,*right;
+};
+
+node* newNode(int data){
+    node *temp = new node;
+    temp->data = data;
+    temp->left=temp->right = NULL;
+
+    return temp;
 }
 
-int Union(int parent[],int a, int b){
+//#define pii pair<struct *node,int>
 
-	cout<<"Find the union\n";
+void calculate(node *root,int hd, map<int,vector<int> >&mymap){
+    if(!root) return;
+    queue<pair<node*,int> > q;
+    q.push(make_pair(root,hd));
+    mymap[hd].push_back(root->data);
+    while(!q.empty()){
+        pair<node*,int> temp = q.front(); q.pop();
 
-    int x = find(parent,a);
-    int y = find(parent,b);
-
-    parent[x]=y;
-}
-
-bool isCycle(int graph[][3],int V){
-    int parent[V]; 
-    memset(parent,-1,sizeof(parent));
-
-    for(int i=0;i<V;i++){
-        for(int j=i+1;j<V;j++){
-            if(i!=j and graph[i][j]==1 and graph[j][i]==1){
-                
-                int x = find(parent,i);
-                int y = find(parent,j);
+        node *var = temp.first; int level = temp.second;
         
-                if(x==y) return true;
-
-                Union(parent,x,y);
-            }
-        }
-
+        if(var->left) { q.push(make_pair(var->left,level-1)); mymap[level-1].push_back(var->left->data); } 
+        if(var->right) { q.push(make_pair(var->right,level+1)); mymap[level+1].push_back(var->right->data); }
     }
-       
-    return false;
 }
 
-int main(int argc,char *argv[])
-{
+
+int main(int argc,char *argv[]){
+
     //clock_t startTime = clock();
-    int V = 3;  
-    int graph[3][3]={
-        {0,1,1},
-        {1,0,1},
-        {1,1,0}
-    };
-    bool flag = isCycle(graph,V);
-    if(flag) cout<<"Cycle is present in the graph\n";
-    else cout<<"Cycle is not present in the graph\n";
+    map<int, vector<int> > mymap;
+    node *root = newNode(1);
+    root->left = newNode(2);
+    root->right = newNode(3);
+    root->left->left = newNode(4);
+    root->left->right = newNode(5);
+    root->right->left = newNode(6);
+    root->right->right = newNode(7);
+    root->right->left->right = newNode(8);
+    root->right->right->right = newNode(9);
+    int hd = 0;
+    calculate(root,hd,mymap);
+    map<int,vector<int> >::iterator it = mymap.begin();
+    for(it;it!=mymap.end();it++){
+        cout<<it->first<<"  ";
+        for(int j=0;j<it->second.size();j++)
+            cout<<it->second[j]<<"  ";
+        cout<<endl;
+    }
     //cout << " Execution time is :: "<<double( clock() - startTime ) / (double)CLOCKS_PER_SEC<< " seconds." << endl;
     return 0;
 }  

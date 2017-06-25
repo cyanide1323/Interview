@@ -65,7 +65,9 @@ T gcd(T a, T b) { while(b) b ^= a ^= b ^= a %= b; return a; }
 template<class T>
 T lcd(T a,T b) { return abs(a*b)/gcd(a,b); }
  
-/*
+
+bool prime[100001];
+
 void seive(int N)
 {
     memset(prime,1,sizeof(prime));
@@ -78,7 +80,7 @@ void seive(int N)
         for(int j = i*i; j < N; j+= (i<<1))
             prime[j]=false;
 }
-*/
+
  
 /*
 template<class T>
@@ -98,55 +100,77 @@ T pow(T x,T n)
 }
 */
 
-int find(int parent[],int x){
-    if(parent[x]==-1) return x;
-    return find(parent,parent[x]);
-}
+long dp[1001][1001];
 
-int Union(int parent[],int a, int b){
+int path[1001][1001];
 
-	cout<<"Find the union\n";
-
-    int x = find(parent,a);
-    int y = find(parent,b);
-
-    parent[x]=y;
-}
-
-bool isCycle(int graph[][3],int V){
-    int parent[V]; 
-    memset(parent,-1,sizeof(parent));
-
-    for(int i=0;i<V;i++){
-        for(int j=i+1;j<V;j++){
-            if(i!=j and graph[i][j]==1 and graph[j][i]==1){
-                
-                int x = find(parent,i);
-                int y = find(parent,j);
-        
-                if(x==y) return true;
-
-                Union(parent,x,y);
-            }
+void printAllPaths(int i,int j,int n,int m){
+    path[i][j]=1;
+    if(i==n-1 and j==m-1){
+        for(int i=0;i<n;i++){
+            for(int j=0;j<m;j++)
+                if(path[i][j])
+                    cout<<i+1<<" "<<j+1<<endl;
         }
-
     }
-       
-    return false;
+    if(i+1<n and j+1<m and dp[i+1][j+1]!=0)
+        printAllPaths(i+1,j+1,n,m);
+    else if(i+1<n and dp[i+1][j]!=0)
+        printAllPaths(i+1,j,n,m);
+    else if(j+1<m and dp[i][j+1]!=0)
+        printAllPaths(i,j+1,n,m);
+    path[i][j]=0;
 }
 
 int main(int argc,char *argv[])
 {
     //clock_t startTime = clock();
-    int V = 3;  
-    int graph[3][3]={
-        {0,1,1},
-        {1,0,1},
-        {1,1,0}
-    };
-    bool flag = isCycle(graph,V);
-    if(flag) cout<<"Cycle is present in the graph\n";
-    else cout<<"Cycle is not present in the graph\n";
+    seive(100000);
+    int n,m; cin>>n>>m;
+    int arr[n][m];
+   
+    for(int i=0;i<n;i++)
+    for(int j=0;j<m;j++){
+         cin>>arr[i][j];
+         dp[i][j]=0;
+    }  
+
+    bool flag = false;
+
+    dp[0][0]=1;
+    for(int i=1;i<n;i++){
+        if(!prime[arr[i][0]]) flag=true;
+        if(flag)
+            dp[i][0]=0;
+        else 
+            dp[i][0]=1;
+    }
+
+    flag = false;
+
+    for(int j=1;j<m;j++){
+        if(!prime[arr[0][j]]) flag=true;
+        if(flag)
+            dp[0][j]=0;
+        else 
+            dp[0][j]=1;
+    } 
+
+    for(int i=1;i<n;i++){
+        for(int j=1;j<m;j++){
+
+            if(prime[arr[i][j]])
+
+                dp[i][j]=((dp[i-1][j]+dp[i][j-1])%MOD + dp[i-1][j-1])%MOD;
+            
+            else dp[i][j]=0;
+        }
+    }
+    
+    cout<<dp[n-1][m-1]<<endl;
+    if(dp[n-1][m-1]==0) return 0;
+    
+    printAllPaths(0,0,n,m);
     //cout << " Execution time is :: "<<double( clock() - startTime ) / (double)CLOCKS_PER_SEC<< " seconds." << endl;
     return 0;
 }  

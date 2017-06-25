@@ -1,4 +1,4 @@
-// finding loop in the graph 
+// seocnd approach using maps and easy way
 
 #include <map>
 #include <set>
@@ -98,55 +98,79 @@ T pow(T x,T n)
 }
 */
 
-int find(int parent[],int x){
-    if(parent[x]==-1) return x;
-    return find(parent,parent[x]);
+struct node{
+	int data;
+	node *next,*random;
+};
+
+node* newNode(int data){
+	node *temp = new node;
+	temp->data = data;
+	temp->next = temp->random = NULL;
+	return temp;
 }
 
-int Union(int parent[],int a, int b){
-
-	cout<<"Find the union\n";
-
-    int x = find(parent,a);
-    int y = find(parent,b);
-
-    parent[x]=y;
+void print(node *start){
+	while(start){
+		cout<<start->data<<"  ";
+		start=start->next;
+	}
 }
 
-bool isCycle(int graph[][3],int V){
-    int parent[V]; 
-    memset(parent,-1,sizeof(parent));
+int main(int argc,char *argv[]){
 
-    for(int i=0;i<V;i++){
-        for(int j=i+1;j<V;j++){
-            if(i!=j and graph[i][j]==1 and graph[j][i]==1){
-                
-                int x = find(parent,i);
-                int y = find(parent,j);
-        
-                if(x==y) return true;
+    //clock_t startTime = clock();
 
-                Union(parent,x,y);
-            }
-        }
+    // create a linked list with clonning
+	node* start = newNode(1);
+    start->next = newNode(2);
+    start->next->next = newNode(3);
+    start->next->next->next = newNode(4);
+    start->next->next->next->next = newNode(5);
+
+    start->random = start->next->next;
+ 
+    // 2's random points to 1
+    start->next->random = start;
+ 
+    // 3's and 4's random points to 5
+    start->next->next->random =
+                    start->next->next->next->next;
+    start->next->next->next->random =
+                    start->next->next->next->next;
+ 
+    // 5's random points to 2
+    start->next->next->next->next->random =
+                                      start->next;
+
+    // create the copy linkedlist
+
+    map<node*,node*> mymap;
+    node *original,*copy;
+    int cnt=0;
+    original=start;
+
+    while(original){
+      
+      if(!copy) copy=newNode(original->data);
+      else copy->next=newNode(original->data);
+      copy=copy->next;
+      mymap.insert(make_pair(original,copy));
+      original=original->next;
 
     }
-       
-    return false;
-}
 
-int main(int argc,char *argv[])
-{
-    //clock_t startTime = clock();
-    int V = 3;  
-    int graph[3][3]={
-        {0,1,1},
-        {1,0,1},
-        {1,1,0}
-    };
-    bool flag = isCycle(graph,V);
-    if(flag) cout<<"Cycle is present in the graph\n";
-    else cout<<"Cycle is not present in the graph\n";
+  copy=mymap[start]; original=start;
+   while(original){
+        copy->random=mymap[original->random];
+        original=original->next; copy=copy->next;
+    }
+
+
+   	original=start; copy=mymap[start];
+   	while(original) { cout<<original->data<<"  "<<original->random->data<<endl; original=original->next; }
+   	cout<<"=== Above original ======================= Below copy ===="<<endl;
+    while(copy) { cout<<copy->data<<"  "<<copy->random->data<<endl; copy=copy->next; }
     //cout << " Execution time is :: "<<double( clock() - startTime ) / (double)CLOCKS_PER_SEC<< " seconds." << endl;
     return 0;
 }  

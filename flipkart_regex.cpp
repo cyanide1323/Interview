@@ -1,4 +1,11 @@
-// finding loop in the graph 
+// regex question of flipkart 
+// question link : http://www.geeksforgeeks.org/flipkart-interview-set-4-sde-1/
+
+// flipkart question 
+
+// applying djikstras's alogirthm implemented before
+
+// lru cache design in cpp
 
 #include <map>
 #include <set>
@@ -18,7 +25,7 @@
 #include <utility>
 #include <iostream>
 #include <algorithm>
-
+#include <bits/stdc++.h>
  
 // definitions
  
@@ -96,57 +103,74 @@ T pow(T x,T n)
     r*=y; 
     return r;
 }
+
+// Definitions of the regex 
+
+1. Normal alphabets – a to z and A to Z
+2. ‘$’ – all string should end with all characters preceding $
+Example:
+Regex :abc$ ,
+Pattern: abcd(Not acceptable) , abc(acceptable), ab(Not acceptable), dhfusdhabc(acceptable) etc..
+3. ‘^’ – all string should start with all characters exceeding ^
+Example: Regex : ^abc
+Pattern: abcd(acceptable) , abc(acceptable), ab(Not acceptable), dhfusdhabc(NOT acceptable) etc..
+Regex: ^ then only pattern acceptable is null.
+4. ‘.’ – any character can be mapped to dot except null
+Example 1: Regex : .abc
+Pattern: Zabc(acceptable) , abc(NOT acceptable), ab(Not acceptable), habc(acceptable) etc..
+Example 2: Regex :a.bc
+Pattern: abc(NOT acceptable) , aXbc(acceptable), ab(Not acceptable), habc(NOT acceptable) etc..
+5. ‘*’-the character just preceding * can be repeated n time where (n>=0)
+Example 1: Regex :abc*de
+Pattern: abccccccccccde (acceptable), abcde(acceptable), abcccd(not acceptable)
 */
 
-int find(int parent[],int x){
-    if(parent[x]==-1) return x;
-    return find(parent,parent[x]);
+class Match{
+	string pattern, regex;
+	public:
+		void setPattern(string pattern);
+		void setRegex(string regex);
+		string getPattern();
+		string getRegex();
+		bool check();
+};
+
+void Match::setPattern(string patternn){
+	this.pattern = pattern;
 }
 
-int Union(int parent[],int a, int b){
-
-	cout<<"Find the union\n";
-
-    int x = find(parent,a);
-    int y = find(parent,b);
-
-    parent[x]=y;
+void Match::setRegex(string regex){
+	this.regex = regex;
 }
 
-bool isCycle(int graph[][3],int V){
-    int parent[V]; 
-    memset(parent,-1,sizeof(parent));
-
-    for(int i=0;i<V;i++){
-        for(int j=i+1;j<V;j++){
-            if(i!=j and graph[i][j]==1 and graph[j][i]==1){
-                
-                int x = find(parent,i);
-                int y = find(parent,j);
-        
-                if(x==y) return true;
-
-                Union(parent,x,y);
-            }
-        }
-
-    }
-       
-    return false;
+string Match::getPattern(){
+	return pattern;
 }
 
-int main(int argc,char *argv[])
-{
+string Match::getRegex(){
+	return regex;
+}
+
+bool Match::check(){
+
+}
+
+int main(int argc,char *argv[]){
+
     //clock_t startTime = clock();
-    int V = 3;  
-    int graph[3][3]={
-        {0,1,1},
-        {1,0,1},
-        {1,1,0}
-    };
-    bool flag = isCycle(graph,V);
-    if(flag) cout<<"Cycle is present in the graph\n";
-    else cout<<"Cycle is not present in the graph\n";
+	Match match;
+	string pattern, regex; 
+	
+	cin >> regex; getchar(); 
+	match.setRegex(regex);
+	
+	int len; cin >> len;
+	while(len--){
+		cin >> pattern; 
+		match.setPattern(pattern);
+		if(match.check()) cout << "Pattern is compatible\n";
+		else cout << "Pattern is not compatible\n";
+	}
     //cout << " Execution time is :: "<<double( clock() - startTime ) / (double)CLOCKS_PER_SEC<< " seconds." << endl;
     return 0;
 }  

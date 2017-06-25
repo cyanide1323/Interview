@@ -1,4 +1,4 @@
-// finding loop in the graph 
+// not done due to various bugs
 
 #include <map>
 #include <set>
@@ -98,55 +98,45 @@ T pow(T x,T n)
 }
 */
 
-int find(int parent[],int x){
-    if(parent[x]==-1) return x;
-    return find(parent,parent[x]);
+struct node{
+    int data;
+    node *left,*right;
+};
+
+node* newNode(int data){
+    node *temp = new node;
+    temp->data = data;
+    temp->left=temp->right = NULL;
+
+    return temp;
 }
 
-int Union(int parent[],int a, int b){
+node* constructTree(node *root, int arr[], int start, int end){
+    
+    if(start>end) return NULL;
+    int mid = (start+end)/2;
+    root=newNode(arr[mid]);
+    root->left = constructTree(root->left,arr,start,mid-1);
+    root->right = constructTree(root->right,arr,mid+1,end);
 
-	cout<<"Find the union\n";
-
-    int x = find(parent,a);
-    int y = find(parent,b);
-
-    parent[x]=y;
+    return root;
 }
 
-bool isCycle(int graph[][3],int V){
-    int parent[V]; 
-    memset(parent,-1,sizeof(parent));
-
-    for(int i=0;i<V;i++){
-        for(int j=i+1;j<V;j++){
-            if(i!=j and graph[i][j]==1 and graph[j][i]==1){
-                
-                int x = find(parent,i);
-                int y = find(parent,j);
-        
-                if(x==y) return true;
-
-                Union(parent,x,y);
-            }
-        }
-
-    }
-       
-    return false;
+void print(node *root){
+    if(!root) return;
+    cout<<root->data<<" ";
+    print(root->left);
+    print(root->right);
 }
 
-int main(int argc,char *argv[])
-{
+int main(int argc,char *argv[]){
+
     //clock_t startTime = clock();
-    int V = 3;  
-    int graph[3][3]={
-        {0,1,1},
-        {1,0,1},
-        {1,1,0}
-    };
-    bool flag = isCycle(graph,V);
-    if(flag) cout<<"Cycle is present in the graph\n";
-    else cout<<"Cycle is not present in the graph\n";
+    
+    int arr[]={1,2,3,4,5,6,7,8,9};
+    node *root; int len = 9;
+    root = constructTree(root,arr,0,len-1);
+    print(root); cout<<endl;
     //cout << " Execution time is :: "<<double( clock() - startTime ) / (double)CLOCKS_PER_SEC<< " seconds." << endl;
     return 0;
 }  

@@ -1,4 +1,6 @@
-// finding loop in the graph 
+// clone a binary tree
+
+// seocnd approach using maps and easy way
 
 #include <map>
 #include <set>
@@ -98,55 +100,82 @@ T pow(T x,T n)
 }
 */
 
-int find(int parent[],int x){
-    if(parent[x]==-1) return x;
-    return find(parent,parent[x]);
+struct node{
+	int data;
+	node *left,*right,*random;
+};
+
+node* newNode(int data){
+	node *temp = new node;
+	temp->data = data;
+	temp->left = temp->random = temp->right = NULL;
+	return temp;
 }
 
-int Union(int parent[],int a, int b){
-
-	cout<<"Find the union\n";
-
-    int x = find(parent,a);
-    int y = find(parent,b);
-
-    parent[x]=y;
+void print(node *root){
+	if(!root) return;
+	print(root->left);
+	if(root->random) cout<<root->data<<"  "<<root->random->data<<endl;
+	else cout<<root->data<<"  "<<"NULL\n";
+	print(root->right);
 }
 
-bool isCycle(int graph[][3],int V){
-    int parent[V]; 
-    memset(parent,-1,sizeof(parent));
-
-    for(int i=0;i<V;i++){
-        for(int j=i+1;j<V;j++){
-            if(i!=j and graph[i][j]==1 and graph[j][i]==1){
-                
-                int x = find(parent,i);
-                int y = find(parent,j);
-        
-                if(x==y) return true;
-
-                Union(parent,x,y);
-            }
-        }
-
-    }
-       
-    return false;
+//==================== This method uses O(n) space ==========================
+node* create(node *root,map<node*,node*>&mymap){
+	if(!root) return NULL; 
+	node *copy = newNode(root->data);
+	mymap.insert(make_pair(root,copy));
+	copy->left=create(root->left,mymap);
+	copy->right=create(root->right,mymap);
+	return copy;
 }
 
-int main(int argc,char *argv[])
-{
+void linkRandom(node *original,node *copy,map<node*,node*>&mymap){
+	if(!original) return;
+	copy->random=mymap[original->random];
+	linkRandom(original->left,copy->left,mymap);
+	linkRandom(original->right,copy->right,mymap);
+}
+
+// ====================== This method does not use any space but modifies tree ===
+
+node* createLeftRight(node *original){
+	
+	if(!original) return NULL;
+	node *copy = newNode(original->data);
+	node *left = original->left;
+	original->left=copy;
+	copy->left=left;
+	
+	if(left->left)
+		left->left=createLeftRight(left);
+
+	if(original->right)
+		left->right=createLeftRight(original->right);
+
+	return original->left;
+}
+
+
+
+
+int main(int argc,char *argv[]){
+
     //clock_t startTime = clock();
-    int V = 3;  
-    int graph[3][3]={
-        {0,1,1},
-        {1,0,1},
-        {1,1,0}
-    };
-    bool flag = isCycle(graph,V);
-    if(flag) cout<<"Cycle is present in the graph\n";
-    else cout<<"Cycle is not present in the graph\n";
+    node *tree = newNode(1);
+    tree->left = newNode(2);
+    tree->right = newNode(3);
+    tree->left->left = newNode(4);
+    tree->left->right = newNode(5);
+    tree->random = tree->left->right;
+    tree->left->left->random = tree;
+    tree->left->right->random = tree->right;
+	map<node*,node*> mymap;
+    node *copy = createLeftRight(tree);
+    //linkRandom(tree,copy,mymap);
+    print(tree); 
+    cout<<"------------------------------------\n";
+    //print(copy);
     //cout << " Execution time is :: "<<double( clock() - startTime ) / (double)CLOCKS_PER_SEC<< " seconds." << endl;
     return 0;
 }  

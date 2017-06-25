@@ -1,4 +1,4 @@
-// finding loop in the graph 
+// bi-directional colouring of the graph
 
 #include <map>
 #include <set>
@@ -98,55 +98,45 @@ T pow(T x,T n)
 }
 */
 
-int find(int parent[],int x){
-    if(parent[x]==-1) return x;
-    return find(parent,parent[x]);
+bool dfs(vector< vector<int> > &graph, int start, bool visited[],int color[],int temp){
+	//cout<<"start and temp is  "<<start<<"  "<<temp<<endl;
+	if(visited[start]) return false;
+	visited[start]=1;
+	color[start]= temp; bool flag = true;
+	for(int i=0;i<graph[start].size();i++){
+		if(!visited[graph[start][i]]) flag&=dfs(graph,graph[start][i],visited,color,temp^1);
+		else {
+			if(color[graph[start][i]]==(temp)) return false;
+ 		} 
+	}
+	return true;
 }
+		
 
-int Union(int parent[],int a, int b){
+int main(int argc,char *argv[]){
 
-	cout<<"Find the union\n";
-
-    int x = find(parent,a);
-    int y = find(parent,b);
-
-    parent[x]=y;
-}
-
-bool isCycle(int graph[][3],int V){
-    int parent[V]; 
-    memset(parent,-1,sizeof(parent));
-
-    for(int i=0;i<V;i++){
-        for(int j=i+1;j<V;j++){
-            if(i!=j and graph[i][j]==1 and graph[j][i]==1){
-                
-                int x = find(parent,i);
-                int y = find(parent,j);
-        
-                if(x==y) return true;
-
-                Union(parent,x,y);
-            }
-        }
-
-    }
-       
-    return false;
-}
-
-int main(int argc,char *argv[])
-{
     //clock_t startTime = clock();
-    int V = 3;  
-    int graph[3][3]={
-        {0,1,1},
-        {1,0,1},
-        {1,1,0}
-    };
-    bool flag = isCycle(graph,V);
-    if(flag) cout<<"Cycle is present in the graph\n";
-    else cout<<"Cycle is not present in the graph\n";
+    int nodes = 5;
+    vector< vector<int> > graph(nodes); 
+    
+    graph[0].push_back(1);
+    graph[1].push_back(0);
+    graph[1].push_back(2);
+    graph[2].push_back(1);
+    graph[2].push_back(4);
+    graph[4].push_back(2);
+    graph[3].push_back(4);
+    graph[4].push_back(3);
+
+    bool visited[nodes]; int color[nodes];
+    for(int i=0;i<nodes;i++) visited[i]=0,color[i]=-1;
+    bool flag = true; int temp = 0;
+    for(int i=0;i<nodes;i++)
+    	if(!visited[i]) flag = flag & (dfs(graph,i,visited,color,temp));
+    for(int i=0;i<nodes;i++) cout<<color[i]<<" ";
+    cout<<endl;
+    if(flag) cout<<"possible\n";
+    else cout<<"Not possible\n";
     //cout << " Execution time is :: "<<double( clock() - startTime ) / (double)CLOCKS_PER_SEC<< " seconds." << endl;
     return 0;
 }  

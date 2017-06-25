@@ -1,4 +1,5 @@
-// finding loop in the graph 
+// minimum jumps to reach destination
+
 
 #include <map>
 #include <set>
@@ -22,7 +23,6 @@
  
 // definitions
  
-#define pii pair<int,int>
 #define piii pair<int,pii>
 #define mp(a,b) make_pair(a,b)
 #define pf(a) push_front(a)
@@ -98,55 +98,44 @@ T pow(T x,T n)
 }
 */
 
-int find(int parent[],int x){
-    if(parent[x]==-1) return x;
-    return find(parent,parent[x]);
+int findSteps(int arr[],int n){
+	int dp[n]; for(int i=0;i<n;i++) dp[i]=1000;
+	dp[0]=0;
+
+	for(int i=0;i<n;i++){
+		int jump = arr[i];
+		for(int j=i+1;j<=min(n-1,i+jump);j++){
+			cout<<i<<"  "<<j<<endl;
+			dp[j]=min(dp[j],dp[i]+1);
+		}
+	}
+	for(int i=0;i<n;i++)
+		cout<<dp[i]<<"  ";
+	cout<<endl;
+	return dp[n-1];
 }
 
-int Union(int parent[],int a, int b){
-
-	cout<<"Find the union\n";
-
-    int x = find(parent,a);
-    int y = find(parent,b);
-
-    parent[x]=y;
+int findSteps2(int arr[],int n){
+	int dp[n]; 
+	dp[0]=0;
+	if(arr[0]==0) return -1;
+	else{
+		for(int j=1;j<n;j++){
+			dp[j]=1000;
+			for(int i=0;i<j;i++){
+				if(j<=i+arr[i] and dp[i]!=1000)
+					dp[j]=min(dp[j],arr[i]+1);
+			}
+		}
+	}
+	return dp[n-1];
 }
 
-bool isCycle(int graph[][3],int V){
-    int parent[V]; 
-    memset(parent,-1,sizeof(parent));
+int main(int argc,char *argv[]){
 
-    for(int i=0;i<V;i++){
-        for(int j=i+1;j<V;j++){
-            if(i!=j and graph[i][j]==1 and graph[j][i]==1){
-                
-                int x = find(parent,i);
-                int y = find(parent,j);
-        
-                if(x==y) return true;
-
-                Union(parent,x,y);
-            }
-        }
-
-    }
-       
-    return false;
-}
-
-int main(int argc,char *argv[])
-{
     //clock_t startTime = clock();
-    int V = 3;  
-    int graph[3][3]={
-        {0,1,1},
-        {1,0,1},
-        {1,1,0}
-    };
-    bool flag = isCycle(graph,V);
-    if(flag) cout<<"Cycle is present in the graph\n";
-    else cout<<"Cycle is not present in the graph\n";
+ 	int n=11; int arr[n]={1, 3, 5, 8, 9, 2, 6, 7, 6, 8, 9}; 
+    cout<<findSteps2(arr,n)<<endl;
     //cout << " Execution time is :: "<<double( clock() - startTime ) / (double)CLOCKS_PER_SEC<< " seconds." << endl;
     return 0;
 }  
