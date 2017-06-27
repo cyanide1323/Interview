@@ -63,6 +63,8 @@ int dy[]={0,-1,1,0,1,-1,1,-1};
  
 template<class T>
 T gcd(T a, T b) { while(b) b ^= a ^= b ^= a %= b; return a; }
+
+
  
 template<class T>
 T lcd(T a,T b) { return abs(a*b)/gcd(a,b); }
@@ -98,6 +100,32 @@ T pow(T x,T n)
     r*=y; 
     return r;
 }
+*/
+
+/*
+
+	learn the use of file stream
+	
+	// __gcd(a,b) also works
+	
+	// are all of the elements positive ?
+	all_of(first,first+n,ispositive());
+
+	// is there at least one positive element ?
+	any_of(first,first+n,ispositive());
+
+	// are none of the elements positive ?
+	none_of(first,first+n,ispositive());
+*/
+
+/*
+	ifstream myfile("file_name.txt");
+	ofstream myfile("file_name.txt");
+	
+	myfile.open();
+	
+	while(getline(myfile,str)) {}
+	myfile >> str;
 */
 
 struct node{
@@ -147,7 +175,7 @@ node* createLeftRight(node *original){
 	original->left=copy;
 	copy->left=left;
 	
-	if(left->left)
+	if(left)
 		left->left=createLeftRight(left);
 
 	if(original->right)

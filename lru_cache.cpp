@@ -120,6 +120,35 @@ void print(node *start){
 	cout<<endl;
 }
 
+void enqueue(node *head, node *rear, node *temp){
+	
+	if(!head and !rear){
+		head = rear = temp;
+		return;
+	}
+
+	temp -> next = head;
+	head -> prev = temp;
+	head = temp;
+}
+
+void dequeue(node *head, node *rear, node *temp){
+	if(!head or !rear) {
+		cout<<"No element in the queue\n";
+	}
+	else if(head == rear){
+		cout<<"Only element deleted\n";
+		delete head;
+	}
+	else{
+		node *deletableNode = rear;
+		node *previous = rear->prev;
+		previous -> next = NULL;
+		rear = rear->prev;
+		delete deletableNode;
+	}
+}
+
 int main(int argc,char *argv[]){
 
     //clock_t startTime = clock();
@@ -137,34 +166,42 @@ int main(int argc,char *argv[]){
     		// move the page to the front 
     		if(head==temp) continue;						// if it is the only node in the queue, no need to do anything
     		else if(rear==temp){
-    			node *val = rear->prev;						// checking if the current node comes at the last, have to take it to the front
-    			val->next=NULL;
+    			//  extract node from the last 						// checking if the current node comes at the last, have to take it to the front
+    			node *previous = rear->prev;
+    			previous -> next = NULL;
+    			rear -> next = head;
+    			head -> prev = rear;
+    			head = rear;
+    			rear = previous;
+
     		}else{
-    			node *val1=temp->prev;						// all other cases
-    			node *val2=temp->next;
-    			val1->next = val2;
-    			val2->prev = val1;
+    			//extracting node from it's place						// all other cases
+    			node *previous = temp -> prev;
+    			node *after = temp -> next;
+    			previous -> next = after;
+    			after -> prev = previous;
+    			temp -> next = head;
+    			head -> prev = temp;
+    			head = temp;
+    
     		}
-    		temp->next=head;
-    		head=temp;
+
+    		//temp->next=head;
+    		//head=temp;
     	}
 
     	else{
     		node *temp = newNode(page_demand);
     		// insert the page to front 
     		if(curr_capacity<capacity){
-    			if(!head and !rear) { head=temp; rear=temp; }
-    			else { temp->next=head; head->prev = temp; head=temp; }
+    			// enqueue the node
+    			enqueue(head, rear, temp);
     		}
     		else{
-    			//cout<<"This is failed\n";
-    			node *var = rear;
-    			rear=rear->prev;
-    			//cout<<"rear and rear->prev is "<<rear->data<<"  "<<var->data<<endl;
-    			free(var); 
-    			curr_capacity--;
-    			temp->next=head; temp->prev=NULL; head=temp;
-    			//cout<<"Current capacity is "<<curr_capacity<<endl;
+    			// dequeue the node
+    			dequeue(head, rear, temp);
+    			// enq ueue the node
+    			enqueue(head, rear, temp);
     		}
     		page_link.insert(make_pair(page_demand,temp));  curr_capacity++;  			// inserting the node in the map with link in queue and increasing the current capcity by 1
     	}
